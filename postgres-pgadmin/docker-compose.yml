@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: suman
+      POSTGRES_PASSWORD: suman123
+      POSTGRES_DB: mydb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: suman@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: suman123
+    ports:
+      - "8082:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pg_data:
